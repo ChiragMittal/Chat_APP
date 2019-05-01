@@ -9,13 +9,7 @@ const path = require("path");
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const dbConnection = require('./database') 
-
-
-// mongoose.connect('mongodb://127.0.0.1:27017/chat_app', { useMongoClient : true });
-// mongoose.connection.on('error', error => console.log(error) );
-// mongoose.Promise = global.Promise;
-
-//require('./middleware/auth/auth');
+const config = require('./configuration/index')
 
 
 app.use(morgan("dev"));
@@ -34,7 +28,7 @@ app.use(function(req,res,next){
 
 app.use(
 	session({
-		secret: 'fraggle-rock', //pick a random string to make the hash that is generated secure
+		secret: config.session.key, 
 		store: new MongoStore({ mongooseConnection: dbConnection }),
 		resave: false, //required
 		saveUninitialized: false //required
@@ -50,9 +44,6 @@ const routes = require('./routes/user');
 
 
 app.use('/', routes);
-
-//app.use('/user', passport.authenticate('jwt', { session : false }), secureRoute );
-
 
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
