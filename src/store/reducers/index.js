@@ -1,11 +1,15 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
 import Auth from './Auth'
-import Book from './Book'
+import Message from './Message'
+import Channel from './Channel'
+import Type from './Type'
 
 const AppReducer = combineReducers({
-  // Auth,
-  Book,
+   Auth,
+  Message,
+ // Channel,
+  Type,
   router: routerReducer
 })
 

@@ -7,11 +7,19 @@ export const REGISTER = 'REGISTER'
 export const LOGIN = 'LOGIN'
 export const LOGOUT = 'LOGOUT'
 export const PROFILE = 'PROFILE'
-
-export const ADD_BOOK = 'ADD_BOOK'
-export const DELETE_BOOK = 'DELETE_BOOK'
-export const EDIT_BOOK = 'EDIT_BOOK'
-export const SET_BOOKS = 'SET_BOOKS'
-export const ADD_TO_FAVOURITES = 'ADD_TO_FAVOURITES'
+// action type for typing
+export const TYPING = 'TYPING'
+export const STOP_TYPING = 'STOP_TYPING'
+// action type for messages
+export const ADD_MESSAGE = 'ADD_MESSAGE'
+export const RETRIEVE_MESSAGE = 'RETRIEVE_MESSAGE'
+export const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE'
+export const LOAD_MESSAGES = 'LOAD_MESSAGES'
+// action type for channels
+export const ADD_CHANNEL = 'ADD_CHANNEL'
+export const CHANGE_CHANNEL = 'CHANGE_CHANNEL'
+export const RETRIEVE_CHANNEL = 'RETRIEVE_CHANNEL'
+export const LOAD_CHANNELS = 'LOAD_CHANNELS'
+export const RECEIVE_CHANNEL = 'RECEIVE_CHANNEL'
 
 

@@ -63,4 +63,43 @@ router.post('/logout', (req, res) => {
     }
 })
 
+router.get('/allUsers',(req,res)=>{
+
+    User.find({},(err,user)=>{
+        if (err) {
+            console.log('User.js post error: ', err)
+        } else if (user) {
+            res.json({
+                user
+            })
+        }
+    })
+})
+
+router.post('/searchUsers',async(req,res)=>{
+
+        let result=[];
+     const {query} = req.body;
+    //const query = "an";
+    console.log(query)
+
+  User.find({},(error,userss)=>{
+    if (error) {
+      console.log('User.js post error: ', error)
+  } else if (userss) {
+
+      for(let j=0;j<userss.length;j++){
+       if(userss[j].username.search(query) >= 0){
+           result.push(userss[j]);
+           
+       }
+      }
+      console.log(result)
+      res.json(result);
+  }
+  })
+
+
+})
+
 module.exports = router

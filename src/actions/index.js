@@ -1,9 +1,11 @@
-import axios from 'axios'
 import * as ACTION from '../constants'
-import { postToBooks ,deleteFromBooks ,getFromBooks ,editToBooks} from "../APIs/book";
-import {addUser , loginUser,getMe} from "../APIs/auth"
+import moment from 'moment';
+import fetch from 'isomorphic-fetch';
+import { newMessages} from "../APIs/message";
+import { loginUser,getMe} from "../APIs/auth"
+import {searchMembers} from "../APIs/members" 
 
-export const getProfile = (id) => {
+export const getProfile = id => {
     return ({
         type: ACTION.PROFILE,
             id
@@ -35,80 +37,121 @@ export const registerUser = userData => ({
     type: ACTION.REGISTER,
     userData
   });
+
+//   MESSAGES ACTIONS  
   
-export const beginRegister = userData => dispatch =>{
-    return addUser(userData).then(({data}) => dispatch(registerUser(data)))
-}  
+export const typing = username => ({
+  type:ACTION.TYPING,
+  username
+}); 
 
-export const beginAddBook = (book = {}) => {
-    return dispatch => {
-      return postToBooks(book).then(({ data }) => dispatch(addBook(data)));
-    };
-  };
+export const stop_typing = username => ({
+  type:ACTION.STOP_TYPING,
+  username
+}); 
 
-export const addBook = (data) => {
-    return ({
-        type: ACTION.ADD_BOOK,
-        
-            data: data
-        
-    })
-}
-
-export function beginDeleteBook (book) {
-    return dispatch => {
-      return deleteFromBooks(book).then(({ data }) =>
-        dispatch(deleteBook(data))
-      );
-    };
-  };
-
-export const deleteBook = (id) => {
-    return ({
-        type: ACTION.DELETE_BOOK,
-        
-            id: id
-        
-    })
-}
-
-export const editBook = (id,shelfStatus,favourite) => {
-    return ({
-        type: ACTION.EDIT_BOOK,
-       
-            id,
-            shelfStatus,
-            favourite
-        
-    })
-};
-
-export const beginEditBook = book => {
-    return dispatch => {
-      return editToBooks(book).then(({ data }) => dispatch(editBook(data)));
-    };
-  };
-
-export const beginGetBooks = () => {
-    return dispatch => {
-      return getFromBooks().then(({ data }) => dispatch(getBooks(data)));
-    };
-  };
+export const addMessage = message=> ({
   
-  export const getBooks = books => ({
-    type: ACTION.SET_BOOKS,
-    books
-  });
+    type: ACTION.ADD_MESSAGE,
+    message
+  
+});
 
-  export const addToFavourites = (data) => {
-    return ({
-        type: ACTION.ADD_TO_FAVOURITES,
-        
-            data: data
-        
-    })
+export const createMessage = message => dispatch =>{
+  return newMessages(message).then(({data}) => dispatch(addMessage(data)));
 }
 
+export function retrieveMessage(json, channel) {
+  const date = moment().format('lll');
+  return {
+    type: ACTION.RETRIEVE_MESSAGE,
+    json,
+    channel,
+    date
+  }
+}
 
+export const receiveMessage = message => ({
+  
+    type: ACTION.RECEIVE_MESSAGE,
+    message
+  
+})
 
+export const requestMessages = () => ({
+  
+    type: ACTION.LOAD_MESSAGES
+  
+})
 
+export const getAllMessages = channel => {
+  return dispatch => {
+    dispatch(requestMessages())
+    return fetch(`/messages/${channel}`)
+      .then(response => response.json())
+      .then(json => dispatch(retrieveMessage(json, channel)))
+      .catch(error => {throw error});
+  }
+}
+
+// CHANNEL ACTIONS
+
+export const addChannel = channel=> ({
+  
+  type: ACTION.ADD_CHANNEL,
+  channel
+
+});
+
+export const createChannel = channel => dispatch =>{
+  return newChannel(channel).then(({data}) => dispatch(addChannel(data)));
+}
+
+export const changeChannel = channel=> ({
+  
+  type: ACTION.CHANGE_CHANNEL,
+  channel
+
+});
+
+export const retrieveChannel = (channel,json)=> ({
+  
+  type: ACTION.RETRIEVE_CHANNEL,
+  channel,
+  json
+
+});
+
+export const requestChannels = () => ({
+  
+  type: ACTION.LOAD_CHANNELS
+
+})
+
+export const receiveChannel = channel => ({
+  
+  type: ACTION.RECEIVE_CHANNEL,
+  channel
+
+})
+
+export const getAllChannels = user => {
+  return dispatch => {
+    dispatch(requestChannels())
+    return fetch(`/channel/${user}`)
+      .then(response => response.json())
+      .then(json => dispatch(retrieveChannel(json, channel)))
+      .catch(error => {throw error});
+  }
+}
+
+//  SEARCH ACTIONS
+
+export const searchPeople = query => ({
+  type: ACTION.SEARCH_PEOPLE,
+  query
+})
+
+export const startSearch = query => dispatch =>{
+  return searchMembers(query).then(({data}) => dispatch(searchPeople(data)));
+}

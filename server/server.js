@@ -39,11 +39,16 @@ app.use(
 app.use(passport.initialize())
 app.use(passport.session()) 
 
-const routes = require('./routes/user');
+const routes_user = require('./routes/user');
+const routes_message = require('./routes/message');
+const routes_channel = require('./routes/channel');
 
 
 
-app.use('/', routes);
+app.use('/', routes_user);
+app.use('/', routes_message);
+app.use('/', routes_channel);
+
 
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
