@@ -22,7 +22,8 @@ export default class Multi_Channel extends Component {
             showModal: false,
             searchUser: "",
             showSearchUser: false,
-            data: []
+            data: [],
+            members:[]
         }
     }
 
@@ -97,13 +98,41 @@ console.log(data.length)
 
     }
 
-    dropMembers = ()=>{
+   async handleOnClick  (user){
+        console.log(user)
+    
+       if(this.state.members.includes(user.username)){
+           return;
+       }
+       else{
+
+        this.setState({
+                   members : [...this.state.members,user]
+               })
+         
+       }
+         
+       console.log(this.state.members)
+
+    //    this.setState({
+    //        members
+    //    })
+         
+}
+
+
+
+    dropList = ()=>{
 //console.log(this.state.data)
+
+const pStyle = {
+    cursor: 'pointer'
+  };
         if(this.state.data.length > 0){
-            return (this.state.data.map((user) =>{
+            return (this.state.data.map((user,index) =>{
                return(
-                   <div>
-             <p>{_.get(user, 'username')}</p>
+                <div onClick={() => this.handleOnClick(user)} key={index} className="user">
+             <p style={pStyle}>{_.get(user, 'username')}</p>
            
              </div>
                )
@@ -118,6 +147,39 @@ console.log(data.length)
         }
     }
 
+     dropMembers=()=>{
+     
+        console.log(this.state.members)
+const pStyle = {
+    float: 'right',
+    'margin-bottom' : 'auto'
+  };
+  
+        if(this.state.members.length > 0){
+            <p>Members</p>
+            return (this.state.members.map((user,index) =>{
+               return(
+                
+                <div key={index} className="user">
+                  
+             <p style={pStyle}>{_.get(user, 'username')}</p><br/>
+           
+             </div>
+               )
+            })
+            )
+        }
+
+        else{
+            return (
+                <div>
+                <p style={pStyle}>🙅 No members! 🙅</p>
+                </div>
+                
+            )
+        }
+    }
+
     handleModalSubmit=(e)=> {
         e.preventDefault();
         // if (this.state.channelName.length < 1) {
@@ -125,8 +187,9 @@ console.log(data.length)
         //         error:true
         //     })
         //   }
+        console.log(this.state.channelName);
 
-          console.log(this.state.showSearchUser);
+          console.log(this.state.members.length);
 
         //   if (this.state.channelName.length > 0 && channels.filter(channel => {
         //     return channel.name === this.state.channelName.trim();
@@ -159,16 +222,23 @@ console.log(data.length)
                 </Modal.Header>
                <Modal.Body>
                   <form  >
-                 {/* <Input
+                 <input
                     ref="channelName"
                     type="text"
                     name="channelName"
                     autoFocus="true"
                     placeholder="Enter the channel name"
                     value={this.state.channelName}
-                    onChange={this.handleModalChange}
-                  /> */}
+                    onChange={(event)=>{
+                        const name = _.get(event, 'target.value');
+                        
+                        this.setState({
+                            channelName: name,
+                        })
+                    }}
+                  />
 </form>
+<br></br>
 <form >
                      <input placeholder="Type name of person..." onChange={(event) =>{
                         const searchUserText = _.get(event, 'target.value');
@@ -182,17 +252,37 @@ console.log(data.length)
 
              <Button  onClick={this.onLoadData.bind(this)} type="submit">Enter</Button> 
        
+       {this.dropList()}
+
+       {/* {this.state.members} */}
+       <div >
+       <h3 style={{'text-align':'right'}}>Members</h3>
        {this.dropMembers()}
+
+       </div>
+                        
                             
                   </form>
 
 
+
                 </Modal.Body> 
                 <Modal.Footer>
-                  <Button onClick={this.modalClose}>Cancel</Button>
+                   <Button onClick={this.modalClose}>Cancel</Button>
                   <Button  onClick={this.handleModalSubmit} type="submit">
                     Create Channel
-                  </Button>
+                  </Button> 
+                  {/* {this.state.members}  */}
+
+                 
+{/* // { this.state.members.map((user,index) =>{ 
+//     return(
+     
+//    <p >{_.get(user,'username')}</p>
+
+
+//      )
+//   })} */}
                 </Modal.Footer>
             </Modal>
             </div>
