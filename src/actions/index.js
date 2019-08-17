@@ -4,6 +4,7 @@ import fetch from 'isomorphic-fetch';
 import { newMessages} from "../APIs/message";
 import { loginUser,getMe} from "../APIs/auth"
 import {searchMembers} from "../APIs/members" 
+import {newChannel} from "../APIs/channel"
 
 export const getProfile = id => {
     return ({
@@ -114,10 +115,9 @@ export const changeChannel = channel=> ({
 
 });
 
-export const retrieveChannel = (channel,json)=> ({
+export const retrieveChannel = (json)=> ({
   
   type: ACTION.RETRIEVE_CHANNEL,
-  channel,
   json
 
 });
@@ -135,12 +135,14 @@ export const receiveChannel = channel => ({
 
 })
 
-export const getAllChannels = user => {
+export function getAllChannels (user) {
+  
   return dispatch => {
     dispatch(requestChannels())
-    return fetch(`/channel/${user}`)
+    return fetch(`http://localhost:3000/channels/${user}`)
       .then(response => response.json())
-      .then(json => dispatch(retrieveChannel(json, channel)))
+      .then(json => dispatch(retrieveChannel(json),
+      console.log(json)))
       .catch(error => {throw error});
   }
 }

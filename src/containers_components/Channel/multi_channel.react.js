@@ -3,15 +3,17 @@ import { Modal, Glyphicon, Input, Button } from 'react-bootstrap';
 import * as actions from '../../actions/index';
 //import Single_list from './single_channel';
 import _ from 'lodash'
-
+import uuid from 'node-uuid';
 import {searchMembers} from '../../APIs/members'
-import Searched from './searched.react';
+import {newChannels} from '../../APIs/channel'
+import io  from 'socket.io-client'
+
+//const socket = io('', { path: '/check' });
+//var socket=io('http://localhost:8000',{'connect timeout': 1000});
 
 export default class Multi_Channel extends Component {
 
-    // static propTypes = {
-    //     onClick: PropTypes.func.isRequired,
-    //   };
+   
 
     constructor(props){
         super(props);
@@ -53,7 +55,7 @@ export default class Multi_Channel extends Component {
       }
 
     handleChangeChannel=(channel)=> {
-        
+        // const { onClick } = this.props;
         this.props.onClick(channel);
     }
 
@@ -68,10 +70,7 @@ if(this.state.searchUser.length>0){
 }
 
 
-     //console.log(response.data.length)
-// if(response.data.length > 0){
 
-// }
     const data = response.data
           .map(users => {
             const id = users._id;
@@ -101,7 +100,7 @@ console.log(data.length)
    async handleOnClick  (user){
         console.log(user)
     
-       if(this.state.members.includes(user.username)){
+       if(this.state.members.some(person => person.username === user.username)){
            return;
        }
        else{
@@ -112,12 +111,7 @@ console.log(data.length)
          
        }
          
-       console.log(this.state.members)
-
-    //    this.setState({
-    //        members
-    //    })
-         
+       console.log()
 }
 
 
@@ -180,36 +174,39 @@ const pStyle = {
         }
     }
 
-    handleModalSubmit=(e)=> {
+    async handleModalSubmit(e) {
+      //  const { channels, dispatch, socket } = this.props;
         e.preventDefault();
-        // if (this.state.channelName.length < 1) {
-        //     this.setState({
-        //         error:true
-        //     })
-        //   }
-        console.log(this.state.channelName);
+        if (this.state.channelName.length < 1) {
+            this.setState({
+                error:true
+            })
+          }
+        //  console.log(this.state.channelName);
 
-          console.log(this.state.members.length);
+        //   console.log(this.state.members.length);
 
-        //   if (this.state.channelName.length > 0 && channels.filter(channel => {
-        //     return channel.name === this.state.channelName.trim();
-        //   }).length < 1){
-            // const newChannel = {
-            //     name: this.state.channelName.trim(),
-            //     id: `${Date.now()}${uuid.v4()}`,
-            //     members : ,
-            //     private: false
-            //   };
-              
-                // dispatch(actions.createChannel(newChannel));
-                // this.handleChangeChannel(newChannel);
-                // socket.emit('new channel', newChannel);
-                //this.setState({channelName: ''});
-        //         this.modalClose();
-        //   }  
-    }
+          if (this.state.channelName.length > 0 ){
+            const newChannel = {
+                name: this.state.channelName.trim(),
+                id: `${Date.now()}${uuid.v4()}`,
+                between : this.state.members,
+                private: false
+              };
+              console.log(newChannel)
+                //actions.createChannel(newChannel);
 
+               await newChannels(
+                    newChannel
+                  );
+               // this.handleChangeChannel(newChannel);
+                socket.emit('new channel', newChannel);
+                this.setState({channelName: ''});
+                this.modalClose();
+          }  
     
+
+}
 
       render(){
         const { channels, messages } = this.props;
@@ -269,7 +266,7 @@ const pStyle = {
                 </Modal.Body> 
                 <Modal.Footer>
                    <Button onClick={this.modalClose}>Cancel</Button>
-                  <Button  onClick={this.handleModalSubmit} type="submit">
+                  <Button  onClick={this.handleModalSubmit.bind(this)} type="submit">
                     Create Channel
                   </Button> 
                   {/* {this.state.members}  */}

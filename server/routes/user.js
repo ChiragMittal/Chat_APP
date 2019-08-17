@@ -4,6 +4,7 @@ const User = require('../database/models/user')
 const passport = require('../passport')
 const jwt = require('jsonwebtoken')
 const config = require('../configuration/index')
+const Channel = require('../database/models/channel')
 
 router.post('/signup', (req, res) => {
     console.log(req.body.userData);
@@ -46,6 +47,7 @@ router.post(
           });
         console.log(token)
         var userInfo = {
+            id:req.user._id,
             username: req.user.username,
             token : token
         };
@@ -74,6 +76,8 @@ router.get('/allUsers',(req,res)=>{
             })
         }
     })
+
+    
 })
 
 router.post('/searchUsers',async(req,res)=>{
@@ -101,5 +105,20 @@ router.post('/searchUsers',async(req,res)=>{
 
 
 })
+
+router.get("/:id", async (req, res) =>{
+
+    const { id } = req.params;
+    console.log(id)
+    User.findOne({_id:id}).exec(function(err,result){
+      if(err){
+        res.status(400).send();
+      }
+      console.log(result)
+      res.status(200).send(result);
+    })
+
+  });
+  
 
 module.exports = router

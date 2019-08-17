@@ -7,6 +7,7 @@ import classnames from "classnames";
 import { beginGetBooks } from "../../actions/index";
 import {loginUser} from "../../APIs/auth"
 import axios from 'axios'
+import cookie from 'react-cookies';
 
 class Login extends Component {
   constructor() {
@@ -31,10 +32,12 @@ class Login extends Component {
             })
             .then(response => {
                 console.log('login response: ')
-                console.log(response)
+                console.log(response.data)
                 if (response.status === 200) {
-                    
-                    this.props.history.push("/search");
+                    //this.props.auth = response.data.username; 
+                    cookie.save('username', this.state.username)
+                    // this.props.history.push(`/home/${response.data.id}`);
+                    this.props.history.push("/chat");
                 }
             }).catch(error => {
                 console.log('login error: ')

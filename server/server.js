@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { generateLocationMessage } = require('./middleware/functions')
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const app = express();
@@ -10,7 +11,9 @@ const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const dbConnection = require('./database') 
 const config = require('./configuration/index')
-
+// var http  = require('http').createServer(app)
+//var sockets = require('socket.io').listen(http)
+var SocketIo = require('socket.io')
 
 app.use(morgan("dev"));
 // app.use(express.static("./"));
@@ -47,7 +50,7 @@ const routes_channel = require('./routes/channel');
 
 app.use('/', routes_user);
 app.use('/', routes_message);
-app.use('/', routes_channel);
+ app.use('/', routes_channel);
 
 
 app.use(function(err, req, res, next) {
@@ -61,6 +64,23 @@ app.get("*",(req, res) => {
     res.sendFile(path.join(__dirname,"../index.html"));
   });
 
-app.listen(3000, () => {
-  console.log('Server started')
-});
+  // http.listen(3000, () => {
+  //   console.log('Server started')
+  // });
+
+  //const server = 
+  app.listen(3000, function(err) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log('server listening on port: %s', 3000);
+  });
+
+//   const io = new SocketIo(server, {path: '/check'})
+// const socketEvents = require('./sockets')(io);
+
+ // var io = sockets;
+ 
+  
+

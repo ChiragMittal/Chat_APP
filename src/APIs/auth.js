@@ -14,5 +14,5 @@ export function addUser (userData){
   }
 
   export const getInfo=()=>{
-    return axios.get("http://localhost:3000/");
+    return axios.get("http://localhost:3000/allUsers");
   }
