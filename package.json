@@ -93,7 +93,7 @@
     "jquery": "^3.2.1",
     "js-base64": "^2.1.9",
     "jsonwebtoken": "^8.5.1",
-    "kind-of": "^5.0.0",
+    "kind-of": "^6.0.3",
     "loaders.css": "^0.1.2",
     "lodash": "^4.17.11",
     "mailgen": "^2.0.2",
