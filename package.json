@@ -121,7 +121,7 @@
     "perfect-scrollbar": "1.4.0",
     "portfinder": "^1.0.13",
     "process-nextick-args": "^1.0.7",
-    "pug": "^2.0.0-rc.2",
+    "pug": "^3.0.1",
     "query": "^0.2.0",
     "rand-token": "^0.3.0",
     "react": "^16.7.0-alpha.2",
